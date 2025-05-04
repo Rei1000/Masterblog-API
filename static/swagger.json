@@ -1,0 +1,134 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "Masterblog API",
+    "version": "1.0",
+    "description": "API zum Verwalten von Blogposts (CRUD + Suche + Sortierung)"
+  },
+  "host": "localhost:5001",
+  "basePath": "/api",
+  "schemes": ["http"],
+  "paths": {
+    "/posts": {
+      "get": {
+        "summary": "Liste aller Blogposts",
+        "description": "Optional mit Sortierung über ?sort=title&direction=asc|desc",
+        "parameters": [
+          {
+            "name": "sort",
+            "in": "query",
+            "type": "string",
+            "description": "Sortierfeld: 'title' oder 'content'",
+            "required": false
+          },
+          {
+            "name": "direction",
+            "in": "query",
+            "type": "string",
+            "description": "Sortierrichtung: 'asc' (aufsteigend) oder 'desc' (absteigend)",
+            "required": false
+          }
+        ],
+        "produces": ["application/json"],
+        "responses": {
+          "200": {
+            "description": "Erfolgreiche Rückgabe der Posts"
+          }
+        }
+      },
+      "post": {
+        "summary": "Neuen Blogpost erstellen",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "title": { "type": "string" },
+                "content": { "type": "string" }
+              },
+              "required": ["title", "content"]
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Post erfolgreich erstellt"
+          },
+          "400": {
+            "description": "Fehlende oder ungültige Felder"
+          }
+        }
+      }
+    },
+    "/posts/{post_id}": {
+      "put": {
+        "summary": "Bestehenden Blogpost aktualisieren",
+        "parameters": [
+          {
+            "name": "post_id",
+            "in": "path",
+            "required": true,
+            "type": "integer"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "title": { "type": "string" },
+                "content": { "type": "string" }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": { "description": "Post aktualisiert" },
+          "404": { "description": "Post nicht gefunden" }
+        }
+      },
+      "delete": {
+        "summary": "Blogpost löschen",
+        "parameters": [
+          {
+            "name": "post_id",
+            "in": "path",
+            "required": true,
+            "type": "integer"
+          }
+        ],
+        "responses": {
+          "200": { "description": "Post gelöscht" },
+          "404": { "description": "Post nicht gefunden" }
+        }
+      }
+    },
+    "/posts/search": {
+      "get": {
+        "summary": "Blogposts durchsuchen",
+        "parameters": [
+          {
+            "name": "title",
+            "in": "query",
+            "type": "string",
+            "description": "Suchbegriff im Titel"
+          },
+          {
+            "name": "content",
+            "in": "query",
+            "type": "string",
+            "description": "Suchbegriff im Inhalt"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Suchergebnisse erfolgreich zurückgegeben"
+          }
+        }
+      }
+    }
+  }
+}
